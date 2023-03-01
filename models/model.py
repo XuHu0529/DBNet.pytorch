@@ -2,8 +2,8 @@
 # @Time    : 2019/8/23 21:57
 # @Author  : zhoujun
 from addict import Dict
-from torch import nn
-import torch.nn.functional as F
+from oneflow import nn
+import oneflow.nn.functional as F
 
 from models.backbone import build_backbone
 from models.neck import build_neck
@@ -36,7 +36,7 @@ class Model(nn.Module):
 
 
 if __name__ == '__main__':
-    import torch
+    import oneflow as torch
 
     device = torch.device('cpu')
     x = torch.zeros(2, 3, 640, 640).to(device)

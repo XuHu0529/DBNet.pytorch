@@ -5,9 +5,9 @@ import copy
 
 import PIL
 import numpy as np
-import torch
-from torch.utils.data import DataLoader
-from torchvision import transforms
+import oneflow as torch
+from oneflow.utils.data import DataLoader
+from flowvision import transforms
 
 
 def get_dataset(data_path, module_name, transform, dataset_args):

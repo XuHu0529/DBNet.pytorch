@@ -4,7 +4,7 @@ from __future__ import division
 import math
 from bisect import bisect_right
 
-import torch
+import oneflow as torch
 
 __all__ = ['LRScheduler', 'WarmupMultiStepLR', 'WarmupPolyLR']
 
@@ -154,14 +154,14 @@ class WarmupPolyLR(torch.optim.lr_scheduler._LRScheduler):
 
         super(WarmupPolyLR, self).__init__(optimizer, last_epoch)
 
-    def get_lr(self):
+    def get_lr(self, base_lr, last_step):
         N = self.max_iters - self.warmup_iters
-        T = self.last_epoch - self.warmup_iters
-        if self.last_epoch < self.warmup_iters:
+        T = self.last_step - self.warmup_iters
+        if self.last_step < self.warmup_iters:
             if self.warmup_method == 'constant':
                 warmup_factor = self.warmup_factor
             elif self.warmup_method == 'linear':
-                alpha = float(self.last_epoch) / self.warmup_iters
+                alpha = float(self.last_step) / self.warmup_iters
                 warmup_factor = self.warmup_factor * (1 - alpha) + alpha
             else:
                 raise ValueError("Unknown warmup type.")

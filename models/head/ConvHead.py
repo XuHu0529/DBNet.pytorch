@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/4 14:54
 # @Author  : zhoujun
-import torch
-from torch import nn
+import oneflow
+from oneflow import nn
 
 
 class ConvHead(nn.Module):

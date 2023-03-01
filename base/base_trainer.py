@@ -8,7 +8,7 @@ import shutil
 from pprint import pformat
 
 import anyconfig
-import torch
+import oneflow as torch
 
 from utils import setup_logger
 
@@ -180,6 +180,7 @@ class BaseTrainer:
     def _initialize(self, name, module, *args, **kwargs):
         module_name = self.config[name]['type']
         module_args = self.config[name]['args']
+
         assert all([k not in module_args for k in kwargs]), 'Overwriting kwargs given in config file is not allowed'
         module_args.update(kwargs)
         return getattr(module, module_name)(*args, **module_args)

@@ -1,8 +1,8 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from torch import nn
-import torch.nn.functional as F
+from oneflow import nn
+import oneflow.nn.functional as F
 
 
 class HSwish(nn.Module):
