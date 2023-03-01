@@ -1,18 +1,19 @@
-import torch.nn as nn
+import oneflow.nn as nn
 import math
-import torch.utils.model_zoo as model_zoo
+from oneflow.hub import load_state_dict_from_url as load_url
 
+import torch.utils.model_zoo
 BatchNorm2d = nn.BatchNorm2d
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101', 'deformable_resnet18', 'deformable_resnet50',
            'resnet152']
 
 model_urls = {
-    'resnet18': 'https://download.pytorch.org/models/resnet18-5c106cde.pth',
-    'resnet34': 'https://download.pytorch.org/models/resnet34-333f7ec4.pth',
-    'resnet50': 'https://download.pytorch.org/models/resnet50-19c8e357.pth',
-    'resnet101': 'https://download.pytorch.org/models/resnet101-5d3b4d8f.pth',
-    'resnet152': 'https://download.pytorch.org/models/resnet152-b121ed2d.pth',
+    'resnet18': 'https://oneflow-public.oss-cn-beijing.aliyuncs.com/model_zoo/flowvision/classification/ResNet/resnet18.zip',
+    'resnet34': 'https://oneflow-public.oss-cn-beijing.aliyuncs.com/model_zoo/flowvision/classification/ResNet/resnet34.zip',
+    'resnet50': 'https://oneflow-public.oss-cn-beijing.aliyuncs.com/model_zoo/flowvision/classification/ResNet/resnet50.zip',
+    'resnet101': 'https://oneflow-public.oss-cn-beijing.aliyuncs.com/model_zoo/flowvision/classification/ResNet/resnet101.zip',
+    'resnet152': 'https://oneflow-public.oss-cn-beijing.aliyuncs.com/model_zoo/flowvision/classification/ResNet/resnet152.zip',
 }
 
 
@@ -197,7 +198,7 @@ def resnet18(pretrained=True, **kwargs):
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
         print('load from imagenet')
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet18']), strict=False)
     return model
 
 
@@ -210,7 +211,7 @@ def deformable_resnet18(pretrained=True, **kwargs):
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
         print('load from imagenet')
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet18']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet18']), strict=False)
     return model
 
 
@@ -222,7 +223,7 @@ def resnet34(pretrained=True, **kwargs):
     model = ResNet(BasicBlock, [3, 4, 6, 3], **kwargs)
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet34']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet34']), strict=False)
     return model
 
 
@@ -234,7 +235,7 @@ def resnet50(pretrained=True, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 6, 3], **kwargs)
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet50']), strict=False)
     return model
 
 
@@ -246,7 +247,7 @@ def deformable_resnet50(pretrained=True, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 6, 3], dcn=dict(deformable_groups=1), **kwargs)
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet50']), strict=False)
     return model
 
 
@@ -258,7 +259,7 @@ def resnet101(pretrained=True, **kwargs):
     model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet101']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet101']), strict=False)
     return model
 
 
@@ -270,7 +271,7 @@ def resnet152(pretrained=True, **kwargs):
     model = ResNet(Bottleneck, [3, 8, 36, 3], **kwargs)
     if pretrained:
         assert kwargs['in_channels'] == 3, 'in_channels must be 3 whem pretrained is True'
-        model.load_state_dict(model_zoo.load_url(model_urls['resnet152']), strict=False)
+        model.load_state_dict(load_url(model_urls['resnet152']), strict=False)
     return model
 
 

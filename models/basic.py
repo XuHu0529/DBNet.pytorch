@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/6 11:19
 # @Author  : zhoujun
-from torch import nn
+from oneflow import nn
 
 
 class ConvBnRelu(nn.Module):

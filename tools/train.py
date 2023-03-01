@@ -20,7 +20,7 @@ def init_args():
 
 
 def main(config):
-    import torch
+    import oneflow as torch
     from models import build_model, build_loss
     from data_loader import get_dataloader
     from trainer import Trainer

@@ -2,9 +2,9 @@
 # @Time    : 2019/11/1 15:31
 # @Author  : zhoujun
 
-import torch
-import torch.nn as nn
-from torch.hub import load_state_dict_from_url
+import oneflow
+import oneflow.nn as nn
+from oneflow.hub import load_state_dict_from_url
 
 __all__ = [
     'ShuffleNetV2', 'shufflenet_v2_x0_5', 'shufflenet_v2_x1_0',

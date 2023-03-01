@@ -3,8 +3,9 @@
 # @Author  : zhoujun
 import time
 
-import torch
-import torchvision.utils as vutils
+import oneflow as torch
+import flowvision.utils as vutils
+import numpy as np
 from tqdm import tqdm
 
 from base import BaseTrainer
@@ -87,7 +88,7 @@ class Trainer(BaseTrainer):
                 self.logger_info(
                     '[{}/{}], [{}/{}], global_step: {}, speed: {:.1f} samples/sec, acc: {:.4f}, iou_shrink_map: {:.4f}, {}, lr:{:.6}, time:{:.2f}'.format(
                         epoch, self.epochs, i + 1, self.train_loader_len, self.global_step, self.log_iter * cur_batch_size / batch_time, acc,
-                        iou_shrink_map, loss_str, lr, batch_time))
+                        iou_shrink_map, loss_str, lr[0], batch_time))
                 batch_start = time.time()
 
             if self.tensorboard_enable and self.config['local_rank'] == 0:
@@ -96,11 +97,11 @@ class Trainer(BaseTrainer):
                     self.writer.add_scalar('TRAIN/LOSS/{}'.format(key), value, self.global_step)
                 self.writer.add_scalar('TRAIN/ACC_IOU/acc', acc, self.global_step)
                 self.writer.add_scalar('TRAIN/ACC_IOU/iou_shrink_map', iou_shrink_map, self.global_step)
-                self.writer.add_scalar('TRAIN/lr', lr, self.global_step)
+                self.writer.add_scalar('TRAIN/lr', np.array(lr), self.global_step)
                 if self.global_step % self.show_images_iter == 0:
                     # show images on tensorboard
                     self.inverse_normalize(batch['img'])
-                    self.writer.add_images('TRAIN/imgs', batch['img'], self.global_step)
+                    self.writer.add_images('TRAIN/imgs', batch['img'].numpy(), self.global_step)
                     # shrink_labels and threshold_labels
                     shrink_labels = batch['shrink_map']
                     threshold_labels = batch['threshold_map']
@@ -108,14 +109,14 @@ class Trainer(BaseTrainer):
                     shrink_labels[shrink_labels > 0.5] = 1
                     show_label = torch.cat([shrink_labels, threshold_labels])
                     show_label = vutils.make_grid(show_label.unsqueeze(1), nrow=cur_batch_size, normalize=False, padding=20, pad_value=1)
-                    self.writer.add_image('TRAIN/gt', show_label, self.global_step)
+                    self.writer.add_image('TRAIN/gt', show_label.numpy(), self.global_step)
                     # model output
                     show_pred = []
                     for kk in range(preds.shape[1]):
                         show_pred.append(preds[:, kk, :, :])
                     show_pred = torch.cat(show_pred)
                     show_pred = vutils.make_grid(show_pred.unsqueeze(1), nrow=cur_batch_size, normalize=False, padding=20, pad_value=1)
-                    self.writer.add_image('TRAIN/preds', show_pred, self.global_step)
+                    self.writer.add_image('TRAIN/preds', show_pred.numpy(), self.global_step)
         return {'train_loss': train_loss / self.train_loader_len, 'lr': lr, 'time': time.time() - epoch_start,
                 'epoch': epoch}
 
@@ -149,8 +150,11 @@ class Trainer(BaseTrainer):
             self.epoch_result['lr']))
         net_save_path = '{}/model_latest.pth'.format(self.checkpoint_dir)
         net_save_path_best = '{}/model_best.pth'.format(self.checkpoint_dir)
-
+        import shutil
+        import os
         if self.config['local_rank'] == 0:
+            if os.path.exists(net_save_path):
+                shutil.rmtree(net_save_path)
             self._save_checkpoint(self.epoch_result['epoch'], net_save_path)
             save_best = False
             if self.validate_loader is not None and self.metric_cls is not None:  # 使用f1作为最优模型指标
@@ -179,8 +183,10 @@ class Trainer(BaseTrainer):
                 best_str += '{}: {:.6f}, '.format(k, v)
             self.logger_info(best_str)
             if save_best:
-                import shutil
-                shutil.copy(net_save_path, net_save_path_best)
+                # shutil.copy(net_save_path, net_save_path_best)
+                if os.path.exists(net_save_path_best):
+                    shutil.rmtree(net_save_path_best)
+                self._save_checkpoint(self.epoch_result['epoch'], net_save_path_best)
                 self.logger_info("Saving current best: {}".format(net_save_path_best))
             else:
                 self.logger_info("Saving checkpoint: {}".format(net_save_path))

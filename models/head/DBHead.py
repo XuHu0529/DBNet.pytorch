@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/4 14:54
 # @Author  : zhoujun
-import torch
-from torch import nn
+import oneflow as torch
+from oneflow import nn
 
 class DBHead(nn.Module):
     def __init__(self, in_channels, out_channels, k = 50):

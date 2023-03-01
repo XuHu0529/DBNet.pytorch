@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/12/4 14:39
 # @Author  : zhoujun
-import torch
-import torch.nn as nn
+import oneflow as torch
+import oneflow.nn as nn
 
 
 class BalanceCrossEntropyLoss(nn.Module):
@@ -48,7 +48,7 @@ class BalanceCrossEntropyLoss(nn.Module):
         positive_loss = loss * positive.float()
         negative_loss = loss * negative.float()
         # negative_loss, _ = torch.topk(negative_loss.view(-1).contiguous(), negative_count)
-        negative_loss, _ = negative_loss.view(-1).topk(negative_count)
+        negative_loss, _ = negative_loss.view(-1).topk(negative_count, dim=-1)
 
         balance_loss = (positive_loss.sum() + negative_loss.sum()) / (positive_count + negative_count + self.eps)
 

@@ -68,7 +68,7 @@ class EVAL():
 
 def init_args():
     parser = argparse.ArgumentParser(description='DBNet.pytorch')
-    parser.add_argument('--model_path', required=False,default='output/DBNet_resnet18_FPN_DBHead/checkpoint/1.pth', type=str)
+    parser.add_argument('--model_path', required=False,default='output/DBNet_resnet18_FPN_DBHead/checkpoint/model_best.pth', type=str)
     args = parser.parse_args()
     return args
 
